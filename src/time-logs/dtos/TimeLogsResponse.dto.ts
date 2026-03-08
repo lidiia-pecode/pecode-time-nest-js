@@ -9,10 +9,10 @@ export class TimeLogsResponse {
   type: TimeLogType;
 
   @Expose()
-  activity_id?: number;
+  activity_id: number | null;
 
   @Expose()
-  sub_activity_id?: number;
+  sub_activity_id: number | null;
 
   @Expose()
   user_id: number;
@@ -21,5 +21,5 @@ export class TimeLogsResponse {
   time: number;
 
   @Expose()
-  date: Date;
+  date: string;
 }

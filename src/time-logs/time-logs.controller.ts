@@ -26,24 +26,27 @@ const HARDCODED_TIME_LOGS: TimeLogsResponse[] = [
     sub_activity_id: 1,
     user_id: 1,
     time: 8,
-    date: new Date('2026-03-04'),
+    date: '2026-03-04',
   },
 
   {
     id: 2,
     type: TimeLogType.PAID_VACATION,
+    activity_id: null,
+    sub_activity_id: null,
     user_id: 2,
     time: 8,
-    date: new Date('2026-03-05'),
+    date: '2026-03-05',
   },
 
   {
     id: 3,
     type: TimeLogType.WORK_ACTIVITY,
     activity_id: 3,
+    sub_activity_id: null,
     user_id: 1,
     time: 8,
-    date: new Date('2026-03-06'),
+    date: '2026-03-06',
   },
 ];
 
@@ -54,15 +57,17 @@ export class TimeLogsController {
   getTimeLogs(@Query() query: TimeLogsQuery) {
     let results = HARDCODED_TIME_LOGS;
 
-    if (query.user_id !== undefined) {
+    if (query.user_id) {
       results = results.filter((log) => log.user_id === query.user_id);
     }
 
-    const startDate = query.start_date ? new Date(query.start_date) : undefined;
-    const endDate = query.end_date ? new Date(query.end_date) : undefined;
+    if (query.start_date) {
+      results = results.filter((log) => log.date >= query.start_date!);
+    }
 
-    if (startDate) results = results.filter((log) => log.date >= startDate);
-    if (endDate) results = results.filter((log) => log.date <= endDate);
+    if (query.end_date) {
+      results = results.filter((log) => log.date <= query.end_date!);
+    }
 
     return {
       next: null,

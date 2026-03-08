@@ -1,6 +1,5 @@
-import { PartialType } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsDate, IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/swagger';
+import { IsEnum, IsInt, IsOptional, Matches, Max, Min } from 'class-validator';
 
 export enum TimeLogType {
   WORK_ACTIVITY = 'WORK_ACTIVITY',
@@ -13,29 +12,26 @@ export class TimeLogsPayload {
   @IsEnum(TimeLogType)
   type: TimeLogType;
 
-  @IsInt()
   @IsOptional()
-  @Type(() => Number)
+  @IsInt()
   activity_id?: number;
 
-  @IsInt()
   @IsOptional()
-  @Type(() => Number)
+  @IsInt()
   sub_activity_id?: number;
 
   @IsInt()
-  @Type(() => Number)
   user_id: number;
 
   @IsInt()
   @Min(0)
   @Max(24)
-  @Type(() => Number)
   time: number;
 
-  @IsDate()
-  @Type(() => Date)
-  date: Date;
+  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  date: string;
 }
 
-export class TimeLogsUpdatePayload extends PartialType(TimeLogsPayload) {}
+export class TimeLogsUpdatePayload extends PartialType(
+  OmitType(TimeLogsPayload, ['user_id'] as const),
+) {}

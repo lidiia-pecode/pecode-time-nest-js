@@ -1,4 +1,4 @@
-import { PartialType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
 export class UserPayload {
@@ -15,4 +15,6 @@ export class UserPayload {
   username: string;
 }
 
-export class UserUpdatePayload extends PartialType(UserPayload) {}
+export class UserUpdatePayload extends PartialType(
+  OmitType(UserPayload, ['email'] as const),
+) {}
