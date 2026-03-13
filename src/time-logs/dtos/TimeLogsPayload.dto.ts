@@ -1,5 +1,6 @@
 import { OmitType, PartialType } from '@nestjs/swagger';
-import { IsEnum, IsInt, IsOptional, Matches, Max, Min } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, Max, Min } from 'class-validator';
+import { IsDateWithoutTimeString } from 'src/lib/validators/IsDateWithoutTimeString';
 
 export enum TimeLogType {
   WORK_ACTIVITY = 'WORK_ACTIVITY',
@@ -28,7 +29,7 @@ export class TimeLogsPayload {
   @Max(24)
   time: number;
 
-  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  @IsDateWithoutTimeString()
   date: string;
 }
 

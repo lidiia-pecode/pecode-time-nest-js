@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Matches } from 'class-validator';
+import { IsInt, IsOptional } from 'class-validator';
+import { IsDateWithoutTimeString } from 'src/lib/validators/IsDateWithoutTimeString';
 
 export class TimeLogsQuery {
   @IsOptional()
@@ -8,10 +9,10 @@ export class TimeLogsQuery {
   user_id?: number;
 
   @IsOptional()
-  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  @IsDateWithoutTimeString()
   start_date?: string;
 
   @IsOptional()
-  @Matches(/^\d{4}-\d{2}-\d{2}$/)
+  @IsDateWithoutTimeString()
   end_date?: string;
 }
