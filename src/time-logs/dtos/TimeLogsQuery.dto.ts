@@ -1,8 +1,9 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsOptional } from 'class-validator';
+import { PaginationQuery } from 'src/lib/dtos';
 import { IsDateWithoutTimeString } from 'src/lib/validators/IsDateWithoutTimeString';
 
-export class TimeLogsQuery {
+export class TimeLogsQuery extends PaginationQuery {
   @IsOptional()
   @Type(() => Number)
   @IsInt()

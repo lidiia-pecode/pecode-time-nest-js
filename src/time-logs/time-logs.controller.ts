@@ -13,88 +13,41 @@ import { Serialize, SerializeList } from 'src/lib/interceptors';
 import {
   TimeLogsPayload,
   TimeLogsUpdatePayload,
-  TimeLogType,
 } from './dtos/TimeLogsPayload.dto';
 import { IdParam } from 'src/lib/dtos/IdParam.dto';
 import { TimeLogsQuery } from './dtos/TimeLogsQuery.dto';
-
-const HARDCODED_TIME_LOGS: TimeLogsResponse[] = [
-  {
-    id: 1,
-    type: TimeLogType.WORK_ACTIVITY,
-    activity_id: 1,
-    sub_activity_id: 1,
-    user_id: 1,
-    time: 8,
-    date: '2026-03-04',
-  },
-
-  {
-    id: 2,
-    type: TimeLogType.PAID_VACATION,
-    activity_id: null,
-    sub_activity_id: null,
-    user_id: 2,
-    time: 8,
-    date: '2026-03-05',
-  },
-
-  {
-    id: 3,
-    type: TimeLogType.WORK_ACTIVITY,
-    activity_id: 3,
-    sub_activity_id: null,
-    user_id: 1,
-    time: 8,
-    date: '2026-03-06',
-  },
-];
+import { TimeLogsService } from './time-logs.service';
 
 @Controller('time-logs')
 export class TimeLogsController {
+  constructor(private service: TimeLogsService) {}
+
   @Get('/')
   @SerializeList(TimeLogsResponse)
   getTimeLogs(@Query() query: TimeLogsQuery) {
-    let results = HARDCODED_TIME_LOGS;
-
-    if (query.user_id) {
-      results = results.filter((log) => log.user_id === query.user_id);
-    }
-
-    if (query.start_date) {
-      results = results.filter((log) => log.date >= query.start_date!);
-    }
-
-    if (query.end_date) {
-      results = results.filter((log) => log.date <= query.end_date!);
-    }
-
-    return {
-      next: null,
-      previous: null,
-      count: results.length,
-      results,
-    };
+    return this.service.list(query);
   }
 
   @Get('/:id')
   @Serialize(TimeLogsResponse)
   getById(@Param() { id }: IdParam) {
-    return HARDCODED_TIME_LOGS.find((log) => log.id === Number(id));
+    return this.service.getTimeLogById(id);
   }
 
   @Post('/')
   @Serialize(TimeLogsResponse)
   create(@Body() payload: TimeLogsPayload) {
-    return HARDCODED_TIME_LOGS;
+    return this.service.createTimeLog(payload);
   }
 
   @Patch('/:id')
   @Serialize(TimeLogsResponse)
   update(@Param() { id }: IdParam, @Body() payload: TimeLogsUpdatePayload) {
-    return HARDCODED_TIME_LOGS;
+    return this.service.updateTimeLog(id, payload);
   }
 
   @Delete('/:id')
-  delete(@Param() { id }: IdParam) {}
+  delete(@Param() { id }: IdParam) {
+    return this.service.deleteTimelog(id);
+  }
 }

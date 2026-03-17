@@ -12,46 +12,38 @@ import { Serialize, SerializeList } from 'src/lib/interceptors';
 import { UserResponse } from './dtos/UserResponse.dto';
 import { IdParam, PaginationQuery } from 'src/lib/dtos';
 import { UserPayload, UserUpdatePayload } from './dtos/UserPayload.dto';
-
-const HARDCODED_USER: UserResponse = {
-  id: 1,
-  email: 'test@example.com',
-  firstName: 'Lidiia',
-  lastName: 'Tsymborovych',
-  username: 'lidocaine',
-};
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
+  constructor(private service: UsersService) {}
+
   @Get('/')
   @SerializeList(UserResponse)
   list(@Query() pagination: PaginationQuery) {
-    return {
-      next: null,
-      previous: null,
-      count: 1,
-      results: [HARDCODED_USER],
-    };
+    return this.service.list(pagination);
   }
 
   @Get(':id')
   @Serialize(UserResponse)
   get(@Param() { id }: IdParam) {
-    return HARDCODED_USER;
+    return this.service.getUserById(id);
   }
 
   @Post('/')
   @Serialize(UserResponse)
   create(@Body() payload: UserPayload) {
-    return HARDCODED_USER;
+    return this.service.createUser(payload);
   }
 
   @Patch(':id')
   @Serialize(UserResponse)
   update(@Param() { id }: IdParam, @Body() payload: UserUpdatePayload) {
-    return HARDCODED_USER;
+    return this.service.updateUser(id, payload);
   }
 
   @Delete(':id')
-  delete(@Param() { id }: IdParam) {}
+  delete(@Param() { id }: IdParam) {
+    return this.service.deleteUser(id);
+  }
 }
