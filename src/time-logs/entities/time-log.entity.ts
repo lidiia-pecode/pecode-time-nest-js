@@ -34,9 +34,9 @@ export class TimeLog {
   @ManyToOne(() => SubActivity, { nullable: true, onDelete: 'SET NULL' })
   @JoinColumn({ name: 'sub_activity_id' })
   @Index('idx_time_logs_sub_activity')
-  subActivity: SubActivity | null;
+  sub_activity: SubActivity | null;
 
-  @RelationId((t: TimeLog) => t.subActivity)
+  @RelationId((t: TimeLog) => t.sub_activity)
   sub_activity_id: number | null;
 
   @ManyToOne(() => User, { nullable: false })
@@ -48,7 +48,7 @@ export class TimeLog {
   user_id: number;
 
   @Column({ type: 'int', nullable: false })
-  @Check(`"time" > 0 AND "time" <= 24`)
+  @Check(`"time" > 0 AND "time" <= 1440`)
   time: number;
 
   @Column({ type: 'date', nullable: false })
