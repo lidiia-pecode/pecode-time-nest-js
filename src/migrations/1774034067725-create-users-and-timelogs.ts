@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class CreateUsersAndTimeLogs1773512293132 implements MigrationInterface {
-  name = 'CreateUsersAndTimeLogs1773512293132';
+export class CreateUsersAndTimelogs1774034067725 implements MigrationInterface {
+  name = 'CreateUsersAndTimelogs1774034067725';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -11,7 +11,7 @@ export class CreateUsersAndTimeLogs1773512293132 implements MigrationInterface {
       `CREATE TYPE "public"."time_logs_type_enum" AS ENUM('WORK_ACTIVITY', 'PAID_VACATION', 'UNPAID_VACATION', 'SICK_LEAVE')`,
     );
     await queryRunner.query(
-      `CREATE TABLE "time_logs" ("id" SERIAL NOT NULL, "type" "public"."time_logs_type_enum" NOT NULL, "time" integer NOT NULL, "date" date NOT NULL, "activity_id" integer, "sub_activity_id" integer, "user_id" integer NOT NULL, CONSTRAINT "CHK_3ed887ae2c0f5ac8c4841d0e3e" CHECK ("time" > 0 AND "time" <= 24), CONSTRAINT "CHK_0961ac3e182a4314173b09c764" CHECK ("type" != 'WORK_ACTIVITY' OR "activity_id" IS NOT NULL OR "sub_activity_id" IS NOT NULL), CONSTRAINT "PK_8657e6aaa7035da9fc7309f385a" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "time_logs" ("id" SERIAL NOT NULL, "type" "public"."time_logs_type_enum" NOT NULL, "time" integer NOT NULL, "date" date NOT NULL, "activity_id" integer, "sub_activity_id" integer, "user_id" integer NOT NULL, CONSTRAINT "CHK_8df388fac7a6aaf9a725e62e5b" CHECK ("time" > 0 AND "time" <= 1440), CONSTRAINT "CHK_0961ac3e182a4314173b09c764" CHECK ("type" != 'WORK_ACTIVITY' OR "activity_id" IS NOT NULL OR "sub_activity_id" IS NOT NULL), CONSTRAINT "PK_8657e6aaa7035da9fc7309f385a" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `CREATE INDEX "idx_time_logs_activity" ON "time_logs" ("activity_id") `,
