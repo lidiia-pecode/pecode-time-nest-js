@@ -25,8 +25,8 @@ export class TimeLogsPayload {
   user_id: number;
 
   @IsInt()
-  @Min(0)
-  @Max(24)
+  @Min(1)
+  @Max(1440)
   time: number;
 
   @IsDateWithoutTimeString()
