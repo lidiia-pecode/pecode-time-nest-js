@@ -13,4 +13,7 @@ export class GoogleUserPayload {
   )
   @IsEmail()
   email: string;
+
+  @IsString()
+  googleId: string;
 }

@@ -1,12 +1,13 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { GoogleUserPayload } from './dtos/google-auth.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/users/entities/user.entity';
-import { Repository } from 'typeorm';
-import { JwtService } from './jwt.service';
 import { createHmac, randomUUID, timingSafeEqual, UUID } from 'crypto';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+
+import { GoogleUserPayload } from './dtos/google-auth.dto';
 import { AuthSession } from './entities/auth-session.entity';
 import { AuthContext } from './types/auth-context';
+import { JwtService } from './jwt.service';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,23 +25,36 @@ export class AuthService {
   }
 
   async validateGoogleUser(details: GoogleUserPayload): Promise<User> {
+    const { googleId, email, firstName, lastName } = details;
+
     let user = await this.userRepository.findOne({
-      where: { email: details.email },
+      where: { googleId },
+    });
+
+    if (user) return user;
+
+    user = await this.userRepository.findOne({
+      where: { email },
     });
 
     if (!user) {
-      const baseUsername = `${details.firstName}_${details.lastName}`;
+      const baseUsername = `${firstName}_${lastName}`;
       const username = this.generateUniqueUsername(baseUsername);
 
       user = this.userRepository.create({
-        email: details.email,
-        firstName: details.firstName,
-        lastName: details.lastName,
+        email,
+        firstName,
+        lastName,
         username,
+        googleId,
       });
       await this.userRepository.save(user);
+
+      return user;
     }
 
+    user.googleId = googleId;
+    await this.userRepository.save(user);
     return user;
   }
 

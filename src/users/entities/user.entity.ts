@@ -16,4 +16,13 @@ export class User {
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
   username: string;
+
+  @Column({
+    type: 'varchar',
+    length: 255,
+    name: 'google_id',
+    unique: true,
+    nullable: true,
+  })
+  googleId?: string;
 }

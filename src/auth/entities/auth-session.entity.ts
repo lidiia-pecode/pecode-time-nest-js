@@ -8,11 +8,8 @@ export class AuthSession {
   @PrimaryColumn({ type: 'uuid' })
   id: UUID;
 
-  @ManyToOne(() => User, { nullable: false, onDelete: 'CASCADE' })
+  @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @Column({ name: 'user_id' })
   user_id: number;
 
   @Column({ type: 'varchar', length: 64, nullable: false })

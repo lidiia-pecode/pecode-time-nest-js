@@ -31,6 +31,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
       email: profile.emails?.[0]?.value ?? '',
       firstName: profile.name?.givenName ?? '',
       lastName: profile.name?.familyName ?? '',
+      googleId: profile.id,
     };
 
     try {
