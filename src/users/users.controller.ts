@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Patch,
@@ -13,10 +14,18 @@ import { UserResponse } from './dtos/UserResponse.dto';
 import { IdParam, PaginationQuery } from 'src/lib/dtos';
 import { UserPayload, UserUpdatePayload } from './dtos/UserPayload.dto';
 import { UsersService } from './users.service';
+import { User } from './entities/user.entity';
+import { CurrentUser } from 'src/lib/decorators/current-user.decorator';
 
 @Controller('users')
 export class UsersController {
   constructor(private service: UsersService) {}
+
+  @Serialize(UserResponse)
+  @Get('/me')
+  getCurrentUser(@CurrentUser() user: User) {
+    return user;
+  }
 
   @Get('/')
   @SerializeList(UserResponse)
@@ -38,12 +47,22 @@ export class UsersController {
 
   @Patch(':id')
   @Serialize(UserResponse)
-  update(@Param() { id }: IdParam, @Body() payload: UserUpdatePayload) {
+  update(
+    @Param() { id }: IdParam,
+    @Body() payload: UserUpdatePayload,
+    @CurrentUser() currentUser: User,
+  ) {
+    if (id !== currentUser.id) {
+      throw new ForbiddenException('You can only update your own profile');
+    }
     return this.service.updateUser(id, payload);
   }
 
   @Delete(':id')
-  delete(@Param() { id }: IdParam) {
+  delete(@Param() { id }: IdParam, @CurrentUser() currentUser: User) {
+    if (id !== currentUser.id) {
+      throw new ForbiddenException('You can only delete your own profile');
+    }
     return this.service.deleteUser(id);
   }
 }
