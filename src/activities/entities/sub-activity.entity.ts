@@ -13,15 +13,15 @@ import { Activity } from './activity.entity';
 @Unique(['name', 'activity'])
 export class SubActivity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  name: string;
+  name!: string;
 
   @ManyToOne(() => Activity, { nullable: false })
   @JoinColumn({ name: 'activity_id' })
-  activity: Activity;
+  activity!: Activity;
 
   @RelationId((a: SubActivity) => a.activity)
-  activity_id: number;
+  activity_id!: number;
 }

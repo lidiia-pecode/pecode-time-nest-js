@@ -3,17 +3,17 @@ import { Transform } from 'class-transformer';
 
 export class GoogleUserPayload {
   @IsString()
-  firstName: string;
+  first_name!: string;
 
   @IsString()
-  lastName: string;
+  last_name!: string;
 
   @Transform(({ value }) =>
     typeof value === 'string' ? value.trim().toLowerCase() : null,
   )
   @IsEmail()
-  email: string;
+  email!: string;
 
   @IsString()
-  googleId: string;
+  googleId?: string;
 }

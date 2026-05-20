@@ -10,7 +10,9 @@ import { RefreshToken } from 'src/lib/decorators/refresh-token.decorator';
 import { RefreshGuard } from './guards';
 import { SessionId } from 'src/lib/decorators/session-id.decorator';
 import { Public } from 'src/lib/decorators/public.decorator';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly service: AuthService) {}
@@ -45,13 +47,63 @@ export class AuthController {
     res.clearCookie('access_token', { path: '/' });
   }
 
+  // ---  LOGIN WITH GOOGLE ---
+  @ApiOperation({
+    summary: 'Login with Google',
+    description: `
+      Redirects user to Google login page.
+
+      ⚠️ This endpoint MUST be opened in browser.
+      It cannot be tested via Swagger or curl because it performs HTTP redirect to Google OAuth.
+
+      Flow:
+      1. User opens this endpoint in browser
+      2. Redirected to Google login page
+      3. After success → redirected back to /auth/google/callback
+    `,
+  })
+  @ApiResponse({
+    status: 302,
+    description: 'Redirect to Google OAuth',
+  })
   @Public()
   @Get('/google')
   @UseGuards(AuthGuard('google'))
   googleAuth() {}
 
+  // ---  GOOGLE CALLBACK ---
+  @ApiOperation({
+    summary: 'Google OAuth callback',
+    description: `
+      Handles redirect from Google after successful login.
+
+      ⚠️ This endpoint is NOT meant to be called manually.
+
+      It is triggered automatically by Google OAuth server after user authentication.
+
+      Flow:
+      1. User logs in via /auth/google
+      2. Google redirects back with authorization code
+      3. Backend exchanges code for user profile
+      4. JWT tokens are created and set as cookies
+      5. User receives success response
+    `,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User authenticated successfully',
+    schema: {
+      example: {
+        success: true,
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized (Google auth failed)',
+  })
   @Public()
-  @Get('google/callback')
+  @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(
     @CurrentUser() user: User,
@@ -64,6 +116,16 @@ export class AuthController {
     return { success: true };
   }
 
+  // --- REFRESH ---
+  @ApiOperation({ summary: 'Refresh tokens' })
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    schema: {
+      example: { success: true },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
   @Post('/refresh')
   @Public()
   @UseGuards(RefreshGuard)
@@ -83,7 +145,13 @@ export class AuthController {
     return { success: true };
   }
 
-  @Public()
+  // --- LOGOUT ---
+  @ApiOperation({ summary: 'Logout current session' })
+  @ApiResponse({
+    status: 200,
+    description: 'User logged out successfully.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(RefreshGuard)
   @Post('/logout')
   async logout(
@@ -94,7 +162,13 @@ export class AuthController {
     return this.service.logout(session_id);
   }
 
-  @Public()
+  // --- LOGOUT ALL ---
+  @ApiOperation({ summary: 'Logout from all devices' })
+  @ApiResponse({
+    status: 200,
+    description: 'User logged out from all sessions.',
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(RefreshGuard)
   @Post('/logout-all')
   async logoutAll(
