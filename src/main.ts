@@ -31,6 +31,18 @@ async function bootstrap() {
     - HTTP-only cookie authentication
   `,
     )
+    .addGlobalResponse({
+      status: 400,
+      description: 'Bad Request',
+    })
+    .addGlobalResponse({
+      status: 401,
+      description: 'Unauthorized',
+    })
+    .addGlobalResponse({
+      status: 404,
+      description: 'Resource not found',
+    })
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, documentFactory, {

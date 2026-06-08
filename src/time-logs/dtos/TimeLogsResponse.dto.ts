@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { TimeLogType } from './TimeLogsPayload.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
+// import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
 
 export class TimeLogsResponse {
   @ApiProperty({
@@ -61,6 +61,6 @@ export class TimeLogsResponse {
   date!: string;
 }
 
-export class TimeLogsPaginatedResponse extends PaginatedResponseDto(
-  TimeLogsResponse,
-) {}
+// export class TimeLogsPaginatedResponse extends PaginatedResponseDto(
+//   TimeLogsResponse,
+// ) {}

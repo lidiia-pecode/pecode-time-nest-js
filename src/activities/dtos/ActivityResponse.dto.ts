@@ -1,6 +1,5 @@
 import { Expose, Type } from 'class-transformer';
 import { ActivityGroupResponse } from './ActivityGroupResponse.dto';
-import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class ActivityResponse {
@@ -26,7 +25,3 @@ export class ActivityResponse {
   @Type(() => ActivityGroupResponse)
   group!: ActivityGroupResponse;
 }
-
-export class ActivityPaginatedResponse extends PaginatedResponseDto(
-  ActivityResponse,
-) {}

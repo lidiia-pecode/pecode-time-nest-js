@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
 
 export class SubActivityResponse {
   @ApiProperty({
@@ -24,7 +23,3 @@ export class SubActivityResponse {
   @Expose()
   activity_id!: number;
 }
-
-export class SubActivityPaginatedResponse extends PaginatedResponseDto(
-  SubActivityResponse,
-) {}

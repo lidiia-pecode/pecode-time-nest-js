@@ -10,14 +10,13 @@ import {
 } from '@nestjs/common';
 import { Serialize, SerializeList } from 'src/lib/interceptors';
 import {
-  ActivityPaginatedResponse,
   ActivityPayload,
   ActivityResponse,
   ActivityUpdatePayload,
 } from './dtos';
 import { PaginationQuery, IdParam } from 'src/lib/dtos';
 import { ActivitiesService } from './services';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Activities')
 @Controller('activities')
@@ -26,21 +25,14 @@ export class ActivitiesController {
 
   // --- POST ---
   @ApiOperation({ summary: 'Create activity' })
-  @ApiResponse({ status: 201, type: ActivityResponse })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 400, description: 'Validation error' })
   @Post('/')
-  @Serialize(ActivityResponse)
+  @Serialize(ActivityResponse, { status: 201 })
   create(@Body() payload: ActivityPayload) {
     return this.service.create(payload);
   }
 
   // --- GET BY ID ---
   @ApiOperation({ summary: 'Get activity by id' })
-  @ApiParam({ name: 'id', example: 1 })
-  @ApiResponse({ status: 200, type: ActivityResponse })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: 'Activity not found' })
   @Get('/:id')
   @Serialize(ActivityResponse)
   getById(@Param() { id }: IdParam) {
@@ -49,11 +41,6 @@ export class ActivitiesController {
 
   // --- UPDATE BY ID ---
   @ApiOperation({ summary: 'Update activity by id' })
-  @ApiParam({ name: 'id', example: 1 })
-  @ApiResponse({ status: 200, type: ActivityResponse })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: 'Activity not found' })
-  @ApiResponse({ status: 400, description: 'Validation error' })
   @Patch('/:id')
   @Serialize(ActivityResponse)
   update(@Param() { id }: IdParam, @Body() payload: ActivityUpdatePayload) {
@@ -62,8 +49,6 @@ export class ActivitiesController {
 
   // --- GET ALL ---
   @ApiOperation({ summary: 'Get list of activities (paginated)' })
-  @ApiResponse({ status: 200, type: ActivityPaginatedResponse })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @Get('/')
   @SerializeList(ActivityResponse)
   list(@Query() pagination: PaginationQuery) {
@@ -72,13 +57,10 @@ export class ActivitiesController {
 
   // --- DELETE BY ID ---
   @ApiOperation({ summary: 'Delete activity by id' })
-  @ApiParam({ name: 'id', example: 1 })
   @ApiResponse({
     status: 200,
     description: 'Activity successfully deleted',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 404, description: 'Activity not found' })
   @Delete('/:id')
   deleteById(@Param() { id }: IdParam) {
     return this.service.deleteById(id);

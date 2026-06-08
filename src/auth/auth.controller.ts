@@ -98,10 +98,6 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized (Google auth failed)',
-  })
   @Public()
   @Get('/google/callback')
   @UseGuards(AuthGuard('google'))
@@ -125,7 +121,6 @@ export class AuthController {
       example: { success: true },
     },
   })
-  @ApiResponse({ status: 401, description: 'Invalid or expired refresh token' })
   @Post('/refresh')
   @Public()
   @UseGuards(RefreshGuard)
@@ -151,7 +146,6 @@ export class AuthController {
     status: 200,
     description: 'User logged out successfully.',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(RefreshGuard)
   @Post('/logout')
   async logout(
@@ -168,7 +162,6 @@ export class AuthController {
     status: 200,
     description: 'User logged out from all sessions.',
   })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
   @UseGuards(RefreshGuard)
   @Post('/logout-all')
   async logoutAll(

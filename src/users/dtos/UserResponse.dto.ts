@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
-import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
+// import { PaginatedResponseDto } from 'src/lib/dtos/PaginatedResponse.dto';
 
 export class UserResponse {
   @ApiProperty({ example: 1 })
@@ -24,4 +24,4 @@ export class UserResponse {
   username!: string;
 }
 
-export class UserPaginatedResponse extends PaginatedResponseDto(UserResponse) {}
+// export class UserPaginatedResponse extends PaginatedResponseDto(UserResponse) {}
