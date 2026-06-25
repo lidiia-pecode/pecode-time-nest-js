@@ -1,18 +1,34 @@
-import { OmitType, PartialType } from '@nestjs/swagger';
+import { ApiProperty, OmitType, PartialType } from '@nestjs/swagger';
 import { IsEmail, IsString } from 'class-validator';
 
 export class UserPayload {
+  @ApiProperty({
+    description: 'User email address',
+    example: 'samanth@gmail.com',
+  })
   @IsEmail()
-  email: string;
+  email!: string;
 
+  @ApiProperty({
+    description: 'User first_name',
+    example: 'Samantha',
+  })
   @IsString()
-  firstName: string;
+  first_name!: string;
 
+  @ApiProperty({
+    description: 'User last_name',
+    example: 'Brown',
+  })
   @IsString()
-  lastName: string;
+  last_name!: string;
 
+  @ApiProperty({
+    description: 'User nickname',
+    example: 'agent007',
+  })
   @IsString()
-  username: string;
+  username!: string;
 }
 
 export class UserUpdatePayload extends PartialType(

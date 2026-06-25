@@ -3,11 +3,13 @@ import {
   NestInterceptor,
   ExecutionContext,
   CallHandler,
+  applyDecorators,
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ClassConstructor, plainToInstance } from 'class-transformer';
 import { DEFAULT_PAGINATION_PAGE_SIZE } from '../const';
+import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 
 type ListResponse<T> = {
   next: string | null;
@@ -21,8 +23,36 @@ type RawListResult<T> = {
   count: number;
 };
 
-export function SerializeList<T>(dto: ClassConstructor<T>) {
-  return UseInterceptors(new SerializeListInterceptor(dto));
+export function SerializeList<T>(
+  dto: ClassConstructor<T>,
+  options?: { status: number },
+) {
+  return applyDecorators(
+    ApiExtraModels(dto),
+    ApiResponse({
+      status: options?.status ?? 200,
+      schema: {
+        properties: {
+          count: { type: 'integer', example: 42 },
+          next: {
+            type: 'string',
+            nullable: true,
+            description: 'URL to the next page of results',
+          },
+          previous: {
+            type: 'string',
+            nullable: true,
+            description: 'URL to the previous page of results',
+          },
+          results: {
+            type: 'array',
+            items: { $ref: getSchemaPath(dto) },
+          },
+        },
+      },
+    }),
+    UseInterceptors(new SerializeListInterceptor(dto)),
+  );
 }
 
 export class SerializeListInterceptor<T> implements NestInterceptor {

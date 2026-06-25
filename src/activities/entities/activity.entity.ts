@@ -13,15 +13,15 @@ import { ActivityGroup } from './activity-group.entity';
 @Unique(['name', 'group'])
 export class Activity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 255, nullable: false })
-  name: string;
+  name!: string;
 
   @ManyToOne(() => ActivityGroup, { nullable: false })
   @JoinColumn({ name: 'group_id' })
-  group: ActivityGroup;
+  group!: ActivityGroup;
 
   @RelationId((a: Activity) => a.group)
-  group_id: number;
+  group_id!: number;
 }

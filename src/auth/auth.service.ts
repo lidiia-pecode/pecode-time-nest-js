@@ -25,7 +25,7 @@ export class AuthService {
   }
 
   async validateGoogleUser(details: GoogleUserPayload): Promise<User> {
-    const { googleId, email, firstName, lastName } = details;
+    const { googleId, email, first_name, last_name } = details;
 
     let user = await this.userRepository.findOne({
       where: { googleId },
@@ -38,13 +38,13 @@ export class AuthService {
     });
 
     if (!user) {
-      const baseUsername = `${firstName}_${lastName}`;
+      const baseUsername = `${first_name}_${last_name}`;
       const username = this.generateUniqueUsername(baseUsername);
 
       user = this.userRepository.create({
         email,
-        firstName,
-        lastName,
+        first_name,
+        last_name,
         username,
         googleId,
       });

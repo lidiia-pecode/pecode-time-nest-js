@@ -47,7 +47,7 @@ export class ActivityGroupsService {
   }
 
   async update(id: number, data: ActivityGroupPayload) {
-    let activityGroup = await this.getById(id);
+    const activityGroup = await this.getById(id);
 
     await this.validateGroupName(data.name, id);
 

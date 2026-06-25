@@ -3,19 +3,19 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
-  email: string;
+  email!: string;
 
   @Column({ type: 'varchar', length: 255, name: 'first_name', nullable: false })
-  firstName: string;
+  first_name!: string;
 
   @Column({ type: 'varchar', length: 255, name: 'last_name', nullable: false })
-  lastName: string;
+  last_name!: string;
 
   @Column({ type: 'varchar', length: 255, unique: true, nullable: false })
-  username: string;
+  username!: string;
 
   @Column({
     type: 'varchar',

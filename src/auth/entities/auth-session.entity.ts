@@ -6,12 +6,12 @@ import { Column, Entity, ManyToOne, PrimaryColumn, JoinColumn } from 'typeorm';
 @Entity({ name: 'auth_sessions' })
 export class AuthSession {
   @PrimaryColumn({ type: 'uuid' })
-  id: UUID;
+  id!: UUID;
 
   @ManyToOne(() => User, { nullable: false })
   @JoinColumn({ name: 'user_id' })
-  user_id: number;
+  user_id!: number;
 
   @Column({ type: 'varchar', length: 64, nullable: false })
-  refresh_hash: string;
+  refresh_hash!: string;
 }
